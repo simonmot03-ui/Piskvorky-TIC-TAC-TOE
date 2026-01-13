@@ -1,0 +1,92 @@
+# ---------------------------------------------------------
+# TIC-TAC-TOE (Piškvorky 3x3)
+# Autor: (Bagster)
+# Kontakt: (doplň e-mail)
+# Datum: (18.1.2026)
+# ---------------------------------------------------------
+
+# Fce. pro zobrazení hrací plochy
+def ukaze_plochu(pole):
+    print("\nAktuální hrací plocha:")
+    print(pole[0], "|", pole[1], "|", pole[2])
+    print("--+---+--")
+    print(pole[3], "|", pole[4], "|", pole[5])
+    print("--+---+--")
+    print(pole[6], "|", pole[7], "|", pole[8], "\n")
+
+# Fce. pro výherný pole
+def vyherni_pole(pole, symbol):
+    vyherni_kombinace = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],  # řádky
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],  # sloupce
+        [0, 4, 8],
+        [2, 4, 6]   # diagonály
+    ]
+    for kombinace in vyherni_kombinace:
+        if pole[kombinace[0]] == pole[kombinace[1]] == pole[kombinace[2]] == symbol:
+            return True
+    return False
+
+
+# Fce. pro získání vstupu od hráče
+def tah_hrace(hrac, symbol, pole):
+    while True:
+        volba = input("Hráč " + str(hrac) + " (" + symbol + "), vyber pozici (1–9): ")
+
+        if not volba.isdigit():
+            print("! Zadej prosím číslo.")
+            continue
+
+        pozice = int(volba) - 1
+
+        if pozice < 0 or pozice > 8:
+            print("! Pozice musí být číslo od 1 do 9.")
+            continue
+
+        if pole[pozice] in ["X", "O"]:
+            print("! Toto pole je již obsazené.")
+            continue
+
+        return pozice
+
+
+# ::::::::::::::
+# HLAVNÍ PROGRAM
+# ::::::::::::::
+
+print("Vítej ve hře TIC-TAC-TOE!")
+print("Cílem hry je umístit tři stejné symboly (X nebo O) do řady –")
+print("horizontálně, vertikálně nebo diagonálně.\n")
+
+pole = ["1","2","3","4","5","6","7","8","9"]
+
+ukaze_plochu(pole)
+
+tah = 0
+
+while True:
+    if tah % 2 == 0:
+        hrac = 1
+        symbol = "X"
+    else:
+        hrac = 2
+        symbol = "O"
+
+    pozice = tah_hrace(hrac, symbol, pole)
+    pole[pozice] = symbol
+
+    ukaze_plochu(pole)
+
+    if vyherni_pole(pole, symbol):
+        print(" Hráč " + str(hrac) + " (" + symbol + ") vyhrává!")
+        break
+
+    if tah == 8:
+        print(" Remíza! Nikdo nevyhrál.")
+        break
+
+    tah += 1
